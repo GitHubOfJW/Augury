@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-清诚工具</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/static/css/font.css">
+    <link rel="stylesheet" href="/static/css/xadmin.css">
+    <script type="text/javascript" src="/static/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/static/js/admin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  
+  <body>
+    <div class="x-body">
+        <form   method="post" class="layui-form layui-form-pane">
+                <!-- 订单编号 -->
+                <div class="layui-form-item">
+                        <label for="order_id" class="layui-form-label">
+                            <span class="x-red"></span>订单编号
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="order_id" name="order_id"  lay-verify="product_number"
+                            autocomplete="off" class="layui-input" placeholder="（预约单可不填）">
+                        </div>
+                </div>
+                <div class="layui-form-item product">
+                        <label for="product_id" class="layui-form-label">
+                            <span class="x-red">*</span>商品
+                        </label>
+                        <div class="layui-input-inline">
+                            <input id="product_id" name="product_id" type="hidden"
+                            autocomplete="off" class="layui-input" lay-verify='required' required>
+                            <input class="layui-btn layui-btn product_id_choose" style="width:100%;" type="button" value="选择商品"/>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux product_desc">
+                                
+                        </div>
+                </div>
+                <div class="layui-form-item consumer">
+                        <label for="consumer_id" class="layui-form-label">
+                            <span class="x-red">*</span>会员
+                        </label>
+                        <div class="layui-input-inline">
+                            <input id="consumer_id" name="consumer_id" type="hidden"
+                            autocomplete="off" class="layui-input" lay-verify='required' required>
+                            <input class="layui-btn layui-btn consumer_id_choose" style="width:100%;" type="button" value="选择会员"/>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux consumer_desc">
+                                
+                        </div>
+                </div>
+                <!-- 买家旺旺 -->
+                <div class="layui-form-item">
+                        <label for="wangwang" class="layui-form-label">
+                            <span class="x-red">*</span>会员旺旺
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="hidden" id="consumerww_id" name="consumerww_id">
+                            <input type="text" id="wangwang" name="wangwang" required="" lay-verify="required"
+                            autocomplete="off" class="layui-input">
+                        </div>
+                </div>
+                 <!-- 成交价格 -->
+                 <div class="layui-form-item">
+                        <label for="last_price" class="layui-form-label">
+                            <span class="x-red">*</span>成交价格
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="last_price" name="last_price" required="" lay-verify="required|price"
+                            autocomplete="off" class="layui-input">
+                        </div>
+                 </div> 
+                <!-- 会员佣金 -->
+                <div class="layui-form-item">
+                        <label for="member_commission" class="layui-form-label">
+                            <span class="x-red">*</span>会员佣金
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="member_commission" name="member_commission" required="" lay-verify="required|price"
+                            autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux commission_desc">
+                                商品佣金:<span class="x-red product_commission"></span>
+                        </div>
+                 </div>
+                <!-- 礼品 -->
+                <div class="layui-form-item">
+                        <label for="gift_id" class="layui-form-label">
+                            <span class="x-red">*</span>礼品
+                        </label>
+                        <div class="layui-input-inline">
+                            <select name="gift_id" lay-filter="gift_id"  required="" lay-verify="required|gift">
+                            </select>
+                        </div>
+                </div>
+                <!-- 预约下单日期 -->
+                <div class="layui-form-item apit_time">
+                        <label for="apit_time" class="layui-form-label">
+                            <span class="x-red">*</span>预约时间
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="apit_time"  lay-verify="apit_date"
+                            autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux apit_desc">
+                        </div>
+                </div> 
+                 <!-- 返款日期 -->
+                 <div class="layui-form-item refundTime">
+                        <label for="refundTime" class="layui-form-label">
+                            <span class="x-red">*</span>返款日期
+                        </label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="refundTime" name="refundTime" required="" lay-verify="required|back_date"
+                            autocomplete="off" class="layui-input">
+                        </div>
+                </div>
+                <!-- 订单状态 -->
+                <!-- <div class="layui-form-item">
+                        <label for="status_id" class="layui-form-label">
+                            <span class="x-red">*</span>订单状态
+                        </label>
+                        <div class="layui-input-inline">
+                            <select name="status_id">
+                            </select>
+                        </div>
+                </div> -->
+                <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">
+                            是否违规
+                        </label>
+                        <table  class="layui-table layui-input-block">
+                            <tbody> 
+                                    <tr>
+                                        <td>
+                                            <div class="layui-input-block">
+                                                <input name="break_rule" lay-skin="primary" type="radio" title="是"  value="1">
+                                                <input name="break_rule" lay-skin="primary" type="radio" title="否" checked  value="0">
+                                            </div>
+                                        </td>
+                                    </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                <div class="layui-form-item layui-form-text">
+                        <label for="remark" class="layui-form-label">
+                            备注
+                        </label>
+                        <div class="layui-input-block">
+                            <textarea placeholder="请输入内容" id="remark" name="remark" class="layui-textarea"></textarea>
+                        </div>
+                </div>
+                <div class="layui-form-item">
+                <button class="layui-btn" lay-submit="" lay-filter="edit">修改</button>
+              </div>
+            </form>
+    </div>
+    <script>
+        layui.use('orderEdit')
+    </script>
+  </body>
+
+</html>
