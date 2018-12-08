@@ -2,11 +2,6 @@
 const BaseController = require('../BaseController');
 
 const adminModel =  require('../../models/adminManager/Admin')
-
-const authCateModel =  require('../../models/adminManager/AuthCate')
-
-const roleModel =  require('../../models/adminManager/Role')
-
  
 class AdminController extends BaseController {
   

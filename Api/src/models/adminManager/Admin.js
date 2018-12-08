@@ -1,4 +1,4 @@
-const { Admin, Role, Sequelize } = require('../../migrations/migration')
+const { Admin, Sequelize } = require('../../migrations/migration')
 
 const moment =  require('moment')
 const md5 = require('md5')
@@ -73,10 +73,7 @@ class AdminModel {
       }
     }]
     }
-
-    conditions.include = [{
-      model:Role
-    }]
+ 
     
     // 时间约束
     if(others.start && others.start.trim().length && moment(others.start).isValid()){
@@ -205,9 +202,7 @@ class AdminModel {
           email: account
         },
         password:md5(md5(password))
-      },include:[{
-        model:Role
-      }]
+      }
     });
 
     return admin;
@@ -251,9 +246,7 @@ class AdminModel {
   findOne(id){
     return Admin.findOne({ where:{
       id:id,
-      },include:[{
-        model:Role
-      }]
+      }
     })
   }
 }

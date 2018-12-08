@@ -1,5 +1,6 @@
 const { sequelize, Sequelize } = require('../../utils/SequelizeInit')
 const moment = require('moment')
+
 const Admin = sequelize.define('admins', {
   account: { 
     type: Sequelize.STRING(30),

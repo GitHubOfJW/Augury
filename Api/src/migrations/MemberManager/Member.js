@@ -1,53 +1,56 @@
 
 const { sequelize, Sequelize } = require('../../utils/SequelizeInit')
 const moment = require('moment')
-const { domain } = require('../../configure/config')
-
-const Wechat = sequelize.define('wechat', {
-  wechat_id: {
-    type:Sequelize.STRING(40),
-    allowNull: false,
-    comment: '微信编号'
-  },
-  wechat: {
-    type:Sequelize.STRING(40),
-    allowNull: false,
-    comment: '微信号'
-  },
-  password: {
+// 会员
+const Member = sequelize.define('member', {
+  num_id: { 
     type: Sequelize.STRING(40),
     allowNull: false,
-    comment: '密码'
+    comment: '会员编号'
   },
-  pay_password: {
-    type: Sequelize.STRING(40),
+  name: { 
+    type: Sequelize.STRING(20),
     allowNull: false,
-    comment: '支付密码'
-  },
-  wechat_name: {
-    type:Sequelize.STRING(30),
-    allowNull: false,
-    comment: '微信昵称'
-  },
-  real_name: {
-    type:Sequelize.STRING(30),
-    allowNull: false,
-    comment: '实名制姓名'
-  },
-  device_id:{
-    type:Sequelize.INTEGER,
-    allowNull: false,
-    comment: '设备编号'
-  },
-  admin_id:{
-    type:Sequelize.INTEGER,
-    allowNull: false,
-    comment: '管理员编号'
+    comment: '真实姓名'
   },
   mobile: {
     type: Sequelize.STRING(11),
     allowNull: true,
-    comment: '绑定手机号'
+    comment: '手机号'
+  },
+  wechat: {
+    type:Sequelize.STRING(30),
+    allowNull: false,
+    comment: '微信号'
+  },
+  gender: {
+    type:Sequelize.ENUM,
+    values:['1','2','0'],
+    allowNull: false,
+    defaultValue:'2',
+    comment: '0 女 1 男  2 未知'
+  },
+  wechat_mobile_match:{
+    type:Sequelize.ENUM,
+    values:['1','2','0'],
+    allowNull: false,
+    defaultValue:'2',
+    comment: '1 是  0 否  2 未知'
+  },
+  recommand:{
+    type:Sequelize.STRING(100),
+    allowNull: false,
+  },
+  remark: {
+    type: Sequelize.TEXT,
+    allowNull: true,
+    defaultValue:0,
+    comment: '备注'
+  },
+  admin_id: {
+    type:Sequelize.INTEGER,
+    allowNull: true,
+    comment: '登记人'
   },
   is_delete: {
     type:Sequelize.BOOLEAN,
@@ -69,4 +72,4 @@ const Wechat = sequelize.define('wechat', {
   engine: 'Innodb',//如果要createAt 和updateAt 不能用MYISAM
 })
 
-module.exports =  Wechat
+module.exports =  Member

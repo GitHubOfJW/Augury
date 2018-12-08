@@ -8,29 +8,12 @@ const { adminApi ,requestType} = require('../configure/routerConfig')
 // 执行功能的控制器
 const controllers = {
   IndexController:require('../controllers/IndexController'),
-  AdminController:require('../controllers/adminManager/AdminController'),
-  CateController:require('../controllers/adminManager/CateController'),
-  AuthController:require('../controllers/adminManager/AuthController'),
-  RoleController:require('../controllers/adminManager/RoleController'),
   UploadController:require('../controllers/uploadManager/UploadController'),
-
-  WechatController: require('../controllers/adminInfoManager/WechatController'),
-
-  ShopkeeperController: require('../controllers/shopkeeperManager/ShopkeeperController'),
-  ShopController: require('../controllers/shopkeeperManager/ShopController'),
-  ProductController: require('../controllers/shopkeeperManager/ProductController'),
-  ConsumerWwController: require('../controllers/shopkeeperManager/ConsumerWwController'),
-  ConsumerController: require('../controllers/shopkeeperManager/ConsumerController'),
-  OrderController: require('../controllers/orderManarger/OrderController'),
-
-  BankCardController: require('../controllers/adminInfoManager/BankCardController'),
-  GiftController: require('../controllers/metadataMananger/GiftController'),
-  DeviceController: require('../controllers/metadataMananger/DeviceController'),
-
-  OthersController: require('../controllers/othersManarger/OthersController'),
+  AdminController:require('../controllers/adminManager/AdminController'), 
+  
+  MemberController: require('../controllers/memberManager/MemberController'),
 }
-
-// console.log(controllers)
+ 
 
 // 取出所有的控制器配置
 const totalConfigControllers = [];

@@ -2,15 +2,13 @@
 const BaseController = require('../BaseController'); 
  
 
-const consumerModel = require('../../models/shopkeeperManager/Consumer')
+const memberModel = require('../../models/memberManager/Member')
 
  
-class ConsumerController extends BaseController {
+class MemberController extends BaseController {
   
-  
-
-  //管理管理员列表请求
-  static async consumerList(req,res){
+  //列表请求
+  static async memberList(req,res){
     const start = req.query.start || '';
     const end = req.query.end || '';
     const username = req.query.username || '';
@@ -28,12 +26,12 @@ class ConsumerController extends BaseController {
       match:match
     };
 
-    const count = await consumerModel.totalCount(conditions);
+    const count = await memberModel.totalCount(conditions);
 
     // 计算页数
     const totalPage = Math.floor((count +  pageSize - 1) / pageSize);
     
-    const list = await consumerModel.list(page,pageSize,conditions)
+    const list = await memberModel.list(page,pageSize,conditions)
  
     const data =  {
       data:list,
@@ -45,12 +43,12 @@ class ConsumerController extends BaseController {
   }
 
   // 状态更新
-  static async consumerUpdate(req,res){
+  static async memberUpdate(req,res){
     if(req.params.id){
-      const data = await consumerModel.update(req.body,req.params.id);
+      const data = await memberModel.update(req.body,req.params.id);
       if(data){
         if(req.session.user && req.session.user.id == req.params.id){
-          const model = await consumerModel.findOne(req.params.id)
+          const model = await memberModel.findOne(req.params.id)
           if(model){
             // 设置model到sesson中
             req.session.user = model;
@@ -70,14 +68,14 @@ class ConsumerController extends BaseController {
   }
  
   // 添加权限请求
-  static async consumerAdd(req,res){
+  static async memberAdd(req,res){
     if(super.validator(req.body.num_id,{required:true},'会员编号',res)
     ||super.validator(req.body.name,{required:true},'会员姓名',res)
     ||super.validator(req.body.mobile,{required:true,isMobile:true},'会员电话',res)
     ||super.validator(req.body.wechat,{required:true},'微信号',res)
     ) return;
  
-    let count = await consumerModel.has({
+    let count = await memberModel.has({
       num_id:req.body.num_id
     })
     if(count>0){
@@ -86,7 +84,7 @@ class ConsumerController extends BaseController {
       return;
     }
     
-    count = await consumerModel.has({
+    count = await memberModel.has({
       mobile:req.body.mobile
     })
     if(count>0){
@@ -95,7 +93,7 @@ class ConsumerController extends BaseController {
       return;
     }
     
-    const data = await consumerModel.insert({
+    const data = await memberModel.insert({
       ...req.body,
       admin_id:req.session.user.id
     })
@@ -111,9 +109,9 @@ class ConsumerController extends BaseController {
 
 
   // 删除
-  static async consumerDelete(req,res){
+  static async memberDelete(req,res){
     if(req.body.ids){
-      const data = await consumerModel.deleteByIds(req.body.ids.split(','))
+      const data = await memberModel.deleteByIds(req.body.ids.split(','))
       if(data){
         const result = super.handlerResponseData(0,'删除成功');
         res.json(result);
@@ -131,7 +129,7 @@ class ConsumerController extends BaseController {
   // 彻底删除
   static async shopkeeperRemove(req,res){
     if(req.body.ids){
-      const data = await consumerModel.removeByIds(req.body.ids.split(','))
+      const data = await memberModel.removeByIds(req.body.ids.split(','))
       if(data){
         const result = super.handlerResponseData(0,'删除成功');
         res.json(result);
@@ -146,13 +144,13 @@ class ConsumerController extends BaseController {
     }
   }
 
-  static async consumerDetail(req,res){
+  static async memberDetail(req,res){
     if(!req.params.id){
       const result = super.handlerResponseData(1,'未获取到对应的id');
       res.json(result);
       return;
     }
-    const data = await consumerModel.findOne(req.params.id)
+    const data = await memberModel.findOne(req.params.id)
 
     if(data){
       const result = super.handlerResponseData(0,'获取成功',data);
@@ -165,7 +163,7 @@ class ConsumerController extends BaseController {
  
 
   // 编辑
-  static async consumerEdit(req,res){
+  static async memberEdit(req,res){
     if(!req.params.id){
       const result = super.handlerResponseData(1,'未获取到对应的id');
       res.json(result);
@@ -178,7 +176,7 @@ class ConsumerController extends BaseController {
     ||super.validator(req.body.wechat,{required:true},'微信号',res)
     ) return;
  
-    let count = await consumerModel.has({
+    let count = await memberModel.has({
       mobile:req.body.num_id
     },req.params.id)
     if(count>0){
@@ -187,7 +185,7 @@ class ConsumerController extends BaseController {
       return;
     }
     
-    const data = await consumerModel.update({
+    const data = await memberModel.update({
       ...req.body,
       admin_id:req.session.user.id
     },req.params.id)
@@ -202,4 +200,4 @@ class ConsumerController extends BaseController {
   }
 }
 
-module.exports = ConsumerController
+module.exports = MemberController

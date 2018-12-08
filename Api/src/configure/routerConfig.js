@@ -12,21 +12,15 @@ const GET = 'get'
 
 
 const adminManager = require('./routerConfig/AdminManager')
-const adminInfoManager = require('./routerConfig/AdminInfoManager')
 const uploadManager = require('./routerConfig/UploadManager')
-const shopkeeperManager = require('./routerConfig/ShopKeeperManager')
-const orderManager = require('./routerConfig/OrderManager')
-const othersManager =  require('./routerConfig/OthersManager')
+const memberManager = require('./routerConfig/MemberManager')
 
 // 导出
 module.exports = {
   adminApi:{
-    ...othersManager.adminApi,
     ...adminManager.adminApi,
-    ...adminInfoManager.adminApi,
     ...uploadManager.adminApi,
-    ...shopkeeperManager.adminApi,
-    ...orderManager.adminApi,
+    ...memberManager.adminApi,
   },
   requestType:{
     POST,

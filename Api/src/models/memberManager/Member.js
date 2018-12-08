@@ -1,12 +1,12 @@
-const { Shop,Admin , Shopkeeper, ShoperkeeperRel , Sequelize,sequelize } = require('../../migrations/migration')
+const { Member,Admin, Sequelize } = require('../../migrations/migration')
 
 const moment =  require('moment')
 
-class Shops {
+class Members {
   
    // 获取数据
   list(page = 1,pagesize = 20,others = {},is_delete = false){
-    const conditions = {}; 
+    const conditions = {};
     // 分页
     if(page > 0 && pagesize > 0){
       if(page <= 0){
@@ -15,58 +15,57 @@ class Shops {
       conditions.offset =  (page - 1) * pagesize;
       conditions.limit = pagesize;
     }
-
+  
     // 排序
     conditions.order = [[Sequelize.col('id'),'DESC']]
 
-    // where条件
-    conditions.where = {
-     is_delete:is_delete,
+     // where条件
+     conditions.where = {
+      is_delete:is_delete,
       [Sequelize.Op.and]:[{
         [Sequelize.Op.or]:{
-          sub_account:{
+          wechat:{
             [Sequelize.Op.like]:`%${others.contact}%`
           },
-          mobile:{
-            [Sequelize.Op.like]:`%${others.contact}%`
-          },
-          wangwang:{
+          recommand:{
             [Sequelize.Op.like]:`%${others.contact}%`
           }
         }
-    },{
+      },
+      {
         [Sequelize.Op.or]:{
-          wangwang:{
-            [Sequelize.Op.like]:`%${others.match}%`
+          name:{
+            [Sequelize.Op.like]:`%${others.username}%`
           },
           mobile:{
-            [Sequelize.Op.like]:`%${others.match}%`
-          },
-          sub_account:{
-            [Sequelize.Op.like]:`%${others.match}%`
+            [Sequelize.Op.like]:`%${others.username}%`
           }
         }
-    }]
-}
-
-    conditions.include = [{
-      model:Admin
-    },{
-      model:Shopkeeper,
-      scope:{
-        wechat:{
-          [Sequelize.Op.like]:`%${others.contact}%`
+      },{
+      [Sequelize.Op.or]:{
+        name:{
+          [Sequelize.Op.like]:`%${others.match}%`
         },
-        qq:{
-          [Sequelize.Op.like]:`%${others.contact}%`
+        mobile:{
+          [Sequelize.Op.like]:`%${others.match}%`
+        },
+        wechat:{
+          [Sequelize.Op.like]:`%${others.match}%`
+        },
+        recommand:{
+          [Sequelize.Op.like]:`%${others.match}%`
+        },
+        num_id:{
+          [Sequelize.Op.like]:`%${others.match}%`
         }
       }
     }]
-
-    if(!!others.shopkeeper_id && others.shopkeeper_id > 0){
-      conditions.where.shopkeeper_id = others.shopkeeper_id
     }
 
+    conditions.include = [{
+      model:Admin
+    }]
+    
     // 时间约束
     if(others.start && others.start.trim().length && moment(others.start).isValid()){
       conditions.where.createdAt = {
@@ -79,13 +78,13 @@ class Shops {
     }
 
 
-    const data = Shop.findAll(conditions);
+    const data = Consumer.findAll(conditions);
     return data;
   }
 
   // 获取
   has(conditions={},excludeId=0){
-   return Shop.count({
+   return Consumer.count({
       where:{
         ...conditions,
         id:{
@@ -97,10 +96,7 @@ class Shops {
 
   // 更新各状态
   update(values,id){
-    if(values.shopkeeper_id <= 0){
-      delete values.shopkeeper_id
-    }
-   return Shop.update(values || {} ,{
+   return Consumer.update(values || {} ,{
       where:{
         id:id
       }
@@ -116,34 +112,44 @@ class Shops {
       is_delete:is_delete,
       [Sequelize.Op.and]:[{
         [Sequelize.Op.or]:{
-          sub_account:{
+          wechat:{
             [Sequelize.Op.like]:`%${others.contact}%`
           },
-          mobile:{
-            [Sequelize.Op.like]:`%${others.contact}%`
-          },
-          wangwang:{
+          recommand:{
             [Sequelize.Op.like]:`%${others.contact}%`
           }
         }
-       },{
-          [Sequelize.Op.or]:{
-            wangwang:{
-              [Sequelize.Op.like]:`%${others.match}%`
-            },
-            mobile:{
-              [Sequelize.Op.like]:`%${others.match}%`
-            },
-            sub_account:{
-              [Sequelize.Op.like]:`%${others.match}%`
-            }
+      },
+      {
+        [Sequelize.Op.or]:{
+          name:{
+            [Sequelize.Op.like]:`%${others.username}%`
+          },
+          mobile:{
+            [Sequelize.Op.like]:`%${others.username}%`
           }
-      }]
+        }
+      },{
+      [Sequelize.Op.or]:{
+        name:{
+          [Sequelize.Op.like]:`%${others.match}%`
+        },
+        mobile:{
+          [Sequelize.Op.like]:`%${others.match}%`
+        },
+        wechat:{
+          [Sequelize.Op.like]:`%${others.match}%`
+        },
+        recommand:{
+          [Sequelize.Op.like]:`%${others.match}%`
+        },
+        num_id:{
+          [Sequelize.Op.like]:`%${others.match}%`
+        }
+      }
+    }]
     }
 
-    if(!!others.shopkeeper_id && others.shopkeeper_id > 0){
-      conditions.where.shopkeeper_id = others.shopkeeper_id
-    }
 
     // 时间约束
     if(others.start && others.start.trim().length && moment(others.start).isValid()){
@@ -157,15 +163,33 @@ class Shops {
     }
 
 
-    const count =  Shop.count(conditions);
+    const count =  Consumer.count(conditions);
     return count;
   }
    
+  ConsumerLogin(account,password){
+    // 查询Consumer
+    let Consumer =  Consumer.findOne({
+      attributes:{ exclude:['password'] },
+      where:{
+        [Sequelize.Op.or]:{
+          account: account,
+          mobile: account,
+          email: account
+        },
+        password:password
+      },include:[{
+        model:Role
+      }]
+    });
+
+    return Consumer;
+  }
   
   // 删除
   deleteByIds(ids = [],reverse = false){
     const deleteIds =  [...(ids||[])]
-    return Shop.update({
+    return Consumer.update({
       is_delete:!reverse
     },{
       where:{
@@ -179,7 +203,7 @@ class Shops {
   // 彻底删除
   removeByIds(ids = []){
     const removeIds =  [...(ids||[])]
-    return Shop.destroy({
+    return Consumer.destroy({
       where:{
         id:{
           [Sequelize.Op.in]:removeIds
@@ -188,14 +212,14 @@ class Shops {
     })
   }
 
-  // 添加管理员
+  // 添加会员
   insert(values){
-      return Shop.create(values)
+    return Consumer.create(values)
   }
   
   // 查询
   findOne(id){
-    return Shop.findOne({ where:{
+    return Consumer.findOne({ where:{
       id:id,
       }
     })
@@ -203,4 +227,4 @@ class Shops {
 }
 
 
-module.exports = new Shops();
+module.exports = new Members();
