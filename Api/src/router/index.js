@@ -10,7 +10,7 @@ const controllers = {
   IndexController:require('../controllers/IndexController'),
   UploadController:require('../controllers/uploadManager/UploadController'),
   AdminController:require('../controllers/adminManager/AdminController'), 
-  
+  CalendarController:require('../controllers/calendarManager/CalendarController'),
   MemberController: require('../controllers/memberManager/MemberController'),
 }
  

@@ -15,7 +15,7 @@ class Lunar {
         // 计算出当前阳历日期对应农历年份
         this.year = i;
         // 获取对应年份的闰月
-        const leapMonth =  Lunar.leapMoth(i)
+        const leapMonth =  Lunar.leapMonth(i)
         this.isLeap = false;
         for(i = 1; i < 13 && offsetDays > 0;i++){
           // 闰月
@@ -59,7 +59,7 @@ class Lunar {
   }
 
   // 返回农历对应年份闰那个月 1-12
-  static leapMoth(year){
+  static leapMonth(year){
     const lm = Lunar.lunarInfo[year - relativeYear] & 0xf;
     return lm
   }
@@ -141,11 +141,11 @@ class Solar {
     const day = date.getDate()
 
     // 阳历此年此月的第一天
-    this.firstDayDate = new Date(year,month,1,0,0,0,0);
+   // this.firstDayDate = new Date(year,month,1,0,0,0,0);
     // 获取当月的天数
     this.days = Solar.getDaysOfSolarMonth(year,month);
     // 获取公里1日星期几
-    this.firstDayWeek = this.firstDayDate.getDay();
+   //this.firstDayWeek = this.firstDayDate.getDay();
 
     // 立春
     this.spingOfBegin = Solar.getYearTerm(year,2)
@@ -166,7 +166,7 @@ class Solar {
     this.monthGanIndex = this.monthOffset % Solar.Gan.length;
     this.monthZhiIndex = this.monthOffset % Solar.Zhi.length;
     // 月干支文字
-    this.mothCloumn =  Solar.Gan[this.monthGanIndex] + Solar.Zhi[this.monthZhiIndex];
+    this.monthColumn =  Solar.Gan[this.monthGanIndex] + Solar.Zhi[this.monthZhiIndex];
 
     // 计算日柱
     this.dateOffset = Date.UTC(year,month,day,0,0,0,0)/86400000 + 25567 + relativeDateGZIndex;

@@ -6,6 +6,8 @@ layui.config({
   adminAdd:'admin/adminAdd',
   adminEdit:'admin/adminEdit',
 
+  calendar:'calendar/calendar',
+
   shopList:'shop/shopList',
   shopAdd:'shop/shopAdd',
   shopEdit:'shop/shopEdit',

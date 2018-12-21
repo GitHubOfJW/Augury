@@ -1,6 +1,8 @@
 
 const validator = require('validator')
 
+const moment = require('moment')
+
 // 写一个baseController，用于做一些公共的处理
 class BaseController {
   // 用户处理返回的数据
@@ -30,6 +32,7 @@ class BaseController {
     isMobile:false,
     isInt:false,
     isBoolean:false,
+    isDate:false,
     min:undefined,
     max:undefined,
     regular:{ enable:false,regx:'',prompt:''}
@@ -68,6 +71,10 @@ class BaseController {
         return true;
       }else if(rules.regular && rules.regular.enable && data && !rules.regular.regx.test(data)){
         const result = BaseController.handlerResponseData(1,rules.regular.prompt)
+        res.json(result);
+        return true;
+      }else if(rules.isDate && data && !moment(data).isValid()){
+        const result = BaseController.handlerResponseData(1,`${name} 必须为日期格式`)
         res.json(result);
         return true;
       }

@@ -25,11 +25,3 @@ let server = app.listen(3000,'localhost',() => {
   console.log("应用实例，访问地址为 http://%s:%s", host, port)
 });
 
-
-const {
-  Solar,
-  Lunar
-} =  require('./src/utils/CalendarUtil')
-
-const solar =new  Solar(new Date())
-console.log(JSON.stringify(solar))

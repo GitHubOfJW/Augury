@@ -14,6 +14,7 @@ const GET = 'get'
 const adminManager = require('./routerConfig/AdminManager')
 const uploadManager = require('./routerConfig/UploadManager')
 const memberManager = require('./routerConfig/MemberManager')
+const calendarManager = require('./routerConfig/CalendarManager')
 
 // 导出
 module.exports = {
@@ -21,6 +22,7 @@ module.exports = {
     ...adminManager.adminApi,
     ...uploadManager.adminApi,
     ...memberManager.adminApi,
+    ...calendarManager.adminApi,
   },
   requestType:{
     POST,

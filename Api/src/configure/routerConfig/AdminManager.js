@@ -13,6 +13,18 @@ const GET = 'get'
 
 // 调用api接口的路由
 const adminApi = {
+  IndexController:{
+    name:'公共相关',
+    routers:{
+      welcome:{
+        path:'/api/v1/welcome/list',
+        desc:'欢迎',
+        method:'welcome',
+        type:GET,
+        selected:true
+      }
+    }
+  },
   AdminController:{
     name:'管理员相关',
     routers:{

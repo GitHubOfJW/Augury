@@ -4,7 +4,7 @@ const isPro = false  // false 测试环境开发 true 上线
 const local = {
   isPro:isPro,
   domain:'http://localhost:3000',
-  corsOrigin:'http://localhost:8890',
+  corsOrigin:'http://localhost',
   isCors:true,
   dbConfig:{
     database:'augury',
