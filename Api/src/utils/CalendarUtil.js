@@ -5,68 +5,71 @@ class Lunar {
   constructor(solarDate = new Date){
     let offsetDays = (Date.UTC(solarDate.getFullYear(),solarDate.getMonth(),solarDate.getDate()) - Date.UTC(relativeYear,0,31))/86400000;
     // 减去要计算的年份对应的天数
-    for(let i = relativeYear;i<2100;i++){
+    let yearDays = 0
+    let i = 0
+    for(i = relativeYear;i<2100 && offsetDays > 0;i++){
       // 获取对应年份的天数
-      let yearDays = Lunar.yearDays(i)
+      yearDays = Lunar.yearDays(i)
       offsetDays -= yearDays;
-      // 最后减成负数的话，要往回退一步
-      if(offsetDays < 0){
-        offsetDays+=yearDays;
-        // 计算出当前阳历日期对应农历年份
-        this.year = i;
-        // 获取对应年份的闰月
-        const leapMonth =  Lunar.leapMonth(i)
+    }
+
+    // 最后减成负数的话，要往回退一步
+    if(offsetDays < 0){
+        offsetDays += yearDays;
+        i--;
+    }
+
+
+    // 计算出当前阳历日期对应农历年份
+    this.year = i;
+    // 获取对应年份的闰月
+    const leapMonth =  Lunar.leapMonth(i)
+    this.isLeap = false;
+    for(i = 1; i < 13 && offsetDays > 0;i++){
+      // 闰月
+      if(leapMonth > 0 && i == (leapMonth + 1) && !this.isLeap){
+        i--;
+        this.isLeap = true;
+        // 返回对应年份闰月的天数
+        yearDays = Lunar.leapMonthDays(this.year);
+      }else{// 非闰月
+        yearDays = Lunar.monthDays(this.year,i)
+      }
+      // 解除闰月
+      if(this.isLeap && i == (leapMonth+1)){
+        this.isLeap = false
+      }
+      offsetDays -= yearDays;
+    }
+
+    if(offsetDays == 0 && leapMonth > 0 && i == leapMonth+1){
+      if(this.isLeap){
         this.isLeap = false;
-        for(i = 1; i < 13 && offsetDays > 0;i++){
-          // 闰月
-          if(leapMonth > 0 && i == (leapMonth + 1) && !this.isLeap){
-            i--;
-            this.isLeap = true;
-            // 返回对应年份闰月的天数
-            yearDays = Lunar.leapDays(this.year);
-          }else{// 非闰月
-            yearDays = Lunar.monthDays(this.year,i)
-          }
-          // 解除闰月
-          if(this.isLeap && i == (leapMonth+1)){
-            this.isLeap = false
-          }
-          offsetDays -= yearDays;
-        }
-        if(offsetDays == 0 && leapMonth > 0 && i == leapMonth+1){
-          if(this.isLeap){
-            this.isLeap = false;
-          }else{
-            this.isLeap = true;
-            i--
-          }
-        }
-        if(offsetDays < 0){
-          offsetDays += yearDays
-          i--;
-        }
-
-        this.month = i;
-        this.days = offsetDays + 1
-
-        // break 大循环
-        break;
+      }else{
+        this.isLeap = true;
+        i--
       }
     }
 
-    
+    if(offsetDays < 0){
+      offsetDays += yearDays
+      i--;
+    }
 
+    this.month = i;
+    this.days = offsetDays + 1
+  
   }
 
   // 返回农历对应年份闰那个月 1-12
   static leapMonth(year){
     const lm = Lunar.lunarInfo[year - relativeYear] & 0xf;
-    return lm
+    return lm == 0xf ? 0 : lm
   }
 
   // 返回农历对应年份闰月的天数
   static leapMonthDays(year){
-    if(leapMonth(year)){
+    if(Lunar.leapMonth(year)){
       return (Lunar.lunarInfo[year - (relativeYear-1)] & 0xf) == 0xf ? 30 : 29;
     }else{
       return 0;
@@ -75,7 +78,7 @@ class Lunar {
 
   // 返回对应year年month月份的总天
   static monthDays(year,month){
-    return (lunarInfo[year-relativeYear] & (0x10000>>month))? 30: 29
+    return (Lunar.lunarInfo[year-relativeYear] & (0x10000>>month))? 30: 29
   }
 
   // 返回农历对应年份的天数
@@ -84,6 +87,7 @@ class Lunar {
     for(let i = 0x8000; i>0x8; i>>=1){
       sum += (Lunar.lunarInfo[year-relativeYear] & i)? 1: 0;
     }
+    return (sum+ Lunar.leapMonthDays(year))
   }
 }
 Lunar.lunarInfo = new Array(
@@ -162,7 +166,7 @@ class Solar {
     this.monthFirstNode = Solar.getYearTerm(month*2);
 
     // 计算月柱
-    this.monthOffset = (year - relativeYear) * 12 + month + relativeMonthGZIndex;
+    this.monthOffset = (year - relativeYear) * 12 + month + 1 + relativeMonthGZIndex;
     this.monthGanIndex = this.monthOffset % Solar.Gan.length;
     this.monthZhiIndex = this.monthOffset % Solar.Zhi.length;
     // 月干支文字
@@ -175,7 +179,7 @@ class Solar {
     this.dateColumn =  Solar.Gan[this.dateGanIndex] + Solar.Zhi[this.dateZhiIndex];
 
     // 计算农历日期
-    this.luanr = new Lunar(date)
+    this.lunar = new Lunar(date)
   }
 }
 

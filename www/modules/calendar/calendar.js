@@ -15,7 +15,6 @@ layui.define(['form','laydate', 'table', 'global'], function(exports) {
         showBottom: false,
         type: 'date',
         change:function(date){
-          console.log(date)
           global.ajax({
             url:'/api/v1/calendar/getLunar',
             type:'GET',
@@ -23,12 +22,12 @@ layui.define(['form','laydate', 'table', 'global'], function(exports) {
               date:date
             },
             success:function(data){
-              console.log(data)
               if(!data.code){
                 $('#sunary').html(date)
                 $('#year').html(data.data.yearColumn)
                 $('#month').html(data.data.monthColumn)
                 $('#day').html(data.data.dateColumn)
+                $('#lunar').html(`${data.data.lunar.year}-${data.data.lunar.month}-${data.data.lunar.days}`)
               }
             },
             error:function(data){
